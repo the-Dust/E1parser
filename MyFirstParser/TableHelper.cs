@@ -90,7 +90,7 @@ namespace MyFirstParser
             column.AutoIncrement = false;
             column.Caption = "Description";
             column.ReadOnly = false;
-            column.Unique = true;
+            column.Unique = false; //true
             table.Columns.Add(column);
 
             table.PrimaryKey = new DataColumn[] { table.Columns["Description"] };
@@ -126,9 +126,7 @@ namespace MyFirstParser
             }
 
             return sValue;
-                /*(from dataRow in table.AsEnumerable()
-                         where dataRow.Field<string>("Item") == item
-                         select Convert.ToString(dataRow.Field<int>("Id"))).Single();*/
+               
         }
     }
 }

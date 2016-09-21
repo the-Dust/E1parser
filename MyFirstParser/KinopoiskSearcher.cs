@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Xml;
 using System.Data;
 using System.Data.OleDb;
+using System.Text.RegularExpressions;
 
 namespace MyFirstParser
 {
@@ -25,6 +26,7 @@ namespace MyFirstParser
         public string vacancy;
         public static DataTable ksTable = new DataTable();
         public List<string> vacancyList = new List<string>();
+        public string[] vacancyArray;
 
         public KinopoiskSearcher()
         {
@@ -53,12 +55,21 @@ namespace MyFirstParser
             string vacancyUri = string.Format(@"https://ekb.zarplata.ru/vacancy?rubric_id[]={0}&limit=50", id);
             string vacancyHtml = HtmlDownloadHelper.DownloadHtml(vacancyUri, Encoding.GetEncoding(65001));
             TextSearcher ts = new TextSearcher(vacancyHtml);
-            ts.Crop("<a href=\"/vacancy/", "<a href=\"/vacancy/extended");
+            vacancyHtml = ts.Crop("<a href=\"/vacancy/", "<a href=\"/vacancy/extended");
+            int dimension = new Regex("<a href=\"/vacancy/").Matches(vacancyHtml).Count;
+            vacancyArray = new string[dimension];
+            Array.Clear(vacancyArray, 0, dimension);
+           
             vacancyList.Clear();
-            while (ts.Skip("<a href=\"/vacancy/"))
+
+            for (int i = 0; i < vacancyArray.Length; i++)
             {
+                ts.Skip("<a href=\"/vacancy/");
+                vacancyArray[i] = "https://ekb.zarplata.ru/vacancy/" + ts.ReadTo("\"");
+                /*
                 string vacancyAddress = "https://ekb.zarplata.ru/vacancy/" + ts.ReadTo("\"");
                 vacancyList.Add(vacancyAddress);
+                */
             }
         }
 

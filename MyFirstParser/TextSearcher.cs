@@ -45,12 +45,13 @@ namespace MyFirstParser
             return result;
         }
 
-        public void Crop(string start, string finish)
+        public string Crop(string start, string finish)
         {
             int s = myText.IndexOf(start, 0);
             int f = myText.IndexOf(finish, 0);
             if (s > -1 && f > -1)
             myText = myText.Substring(s, f-s);
+            return myText;
         }
     }
 }

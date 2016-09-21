@@ -18,7 +18,7 @@ namespace MyFirstParser
 
         string sql = "SELECT * FROM MyTable";
         string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=База.mdb;Jet OLEDB:Engine Type=5";
-        string clearCreation = "CREATE TABLE MyTable(Data text(255),Salary text(255),Vacancy text(255),Description memo, PRIMARY KEY (Description));";
+        string clearCreation = "CREATE TABLE MyTable(Data text(255),Salary text(255),Vacancy text(255),Description memo);"; //, PRIMARY KEY (Description)
         
         public DbCreator()
         {
@@ -35,48 +35,20 @@ namespace MyFirstParser
                 return;
             }
 
-            //Создаем пустую таблицу и подключаемся к базе
+            //Создаем пустую таблицу и добавляем ее в базу
             DataTable myDataTable = new DataTable();
             dbModification(connectionString, clearCreation, myDataTable, false);
-            /*
-            OleDbConnection myAccessConn = null;
-            try
-            {
-                myAccessConn = new OleDbConnection(connectionString);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: Failed to create a database connection." + ex.Message);
-                return;
-            }
-
-            //Заполняем базу пустой таблицей
-            try
-            {
-                OleDbCommand myAccessCommand = new OleDbCommand(clearCreation, myAccessConn);
-                OleDbDataAdapter myDataAdapter = new OleDbDataAdapter(myAccessCommand);
-                myAccessConn.Open();
-                myDataAdapter.Fill(myDataTable);
-            }
-            catch (Exception ex)
-            {
-               MessageBox.Show("Error: Failed to retrieve the required data from the DataBase." + ex.Message);
-                return;
-            }
-            finally
-            {
-                myAccessConn.Close();
-            } */
+            
         }
 
         //Формируем таблицу базы
-        public void GetDb(List<string> list)
+        public void GetDb(string[] array)
         {
             //Пробегаемся по всем html адресам из списка и заполняем таблицу
             TableHelper th = new TableHelper(true);
-            for(int i = 0; i < list.Count; i++)
+            for (int i = 0; i < array.Length; i++)
             {
-                string choosenVacancy = HtmlDownloadHelper.DownloadHtml(list[i], Encoding.GetEncoding(65001));
+                string choosenVacancy = HtmlDownloadHelper.DownloadHtml(array[i], Encoding.GetEncoding(65001));
                 TextSearcher ts = new TextSearcher(choosenVacancy);
                 ts.Skip("<title>");
                 vacancy = ts.ReadTo(":");
@@ -84,22 +56,11 @@ namespace MyFirstParser
                 description = ts.ReadTo("\"");
                 th.dbAddRow(date, vacancy, salary, description);
             }
-
+            //Записываем полученную таблицу в базу. Все.
             dbModification(connectionString, sql, th.table, true);
-            /*
-            OleDbConnection connection = new OleDbConnection(connectionString);
             
-            connection.Open();
-            oleDbCommand = new OleDbCommand(sql, connection);
-            dataAdapter1 = new OleDbDataAdapter(sql, connection);
-            
-            OleDbCommandBuilder commandBuilder = new OleDbCommandBuilder(dataAdapter1);
-
-            //dataAdapter1.Fill(th.table);
-            dataAdapter1.Update(th.table);
-            connection.Close(); */
         }
-
+        //Метод подключения и модификации базы
         public static void dbModification(string sqlConnection, string sqlCommand, DataTable dataTable, bool isUpdate)
         {
             OleDbConnection myAccessConn = null;
