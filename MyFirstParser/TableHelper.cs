@@ -3,25 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
+using System.Windows.Forms;
 
 namespace MyFirstParser
 {
     class TableHelper
     {
+
+        MyDel ViewHelper;
+        public DataTable table = new DataTable("MyTable");
+        DataRow row;
+        DataColumn column;
+
         public TableHelper()
         {
             MakeTable();
+            ViewHelper = new MyDel(GetView);
         }
 
         public TableHelper(bool a)
         {
             MakeTable(a);
+            ViewHelper = new MyDel(GetView);
         }
 
-        public DataTable table = new DataTable("MyTable");
-        DataRow row;
-        DataColumn column;
-        
+        public DataRowView GetView(object o)
+        {
+            return o as DataRowView;
+        }
+               
         public void MakeTable()
         {
             // Первый столбец
@@ -106,7 +116,8 @@ namespace MyFirstParser
 
         public static string TakeId()
         {
-            DataRowView myDataRowView = Program.myForm.comboBox1.SelectedItem as DataRowView;
+            
+            DataRowView myDataRowView = Program.myForm.Invoke(new TableHelper().ViewHelper, Program.myForm.comboBox1.SelectedItem) as DataRowView; 
             string sValue = "";
             if (myDataRowView != null)
             {
