@@ -21,14 +21,15 @@ namespace MyFirstParser
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (ks.DownloadHtml(textBox1.Text))
-                if (ks.FindCover())
-                { textBox2.Text += ks.vacancy; }
+            if (ks.DownloadHtml())
+            {
+                ks.FindVacancyList();
+                button2.Enabled = true;
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Program.myForm.textBox1.Text = TableHelper.TakeId();
             ks.FindVacancy(TableHelper.TakeId());
             DbCreator vacancyDb = new DbCreator();
             vacancyDb.GetDb(ks.vacancyArray);

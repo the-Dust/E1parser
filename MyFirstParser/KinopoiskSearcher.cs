@@ -7,6 +7,7 @@ using System.Xml;
 using System.Data;
 using System.Data.OleDb;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace MyFirstParser
 {
@@ -21,11 +22,8 @@ namespace MyFirstParser
     public class KinopoiskSearcher
     {
         private string myHtml;
-        private Image myCover;
         private readonly string baseUri;
-        public string vacancy;
         public static DataTable ksTable = new DataTable();
-        public List<string> vacancyList = new List<string>();
         public string[] vacancyArray;
 
         public KinopoiskSearcher()
@@ -33,21 +31,18 @@ namespace MyFirstParser
             baseUri = @"https://ekb.zarplata.ru/";
         }
 
-        public bool DownloadHtml(string movieName)
+        public bool DownloadHtml()
         {
-            myCover = null;
-            
             try
             {
-                myHtml = HtmlDownloadHelper.DownloadHtml(string.Format(baseUri, movieName), Encoding.GetEncoding(65001));
+                myHtml = HtmlDownloadHelper.DownloadHtml(baseUri, Encoding.GetEncoding(65001));
                 return true;
             }
             catch(Exception e)
             {
-                vacancy = e.Message;
+                MessageBox.Show(e.Message);
                 return false;
             }
-            
         }
 
         public void FindVacancy(string id)
@@ -59,21 +54,16 @@ namespace MyFirstParser
             int dimension = new Regex("<a href=\"/vacancy/").Matches(vacancyHtml).Count;
             vacancyArray = new string[dimension];
             Array.Clear(vacancyArray, 0, dimension);
-           
-            vacancyList.Clear();
-
+            Program.myForm.label1.Text = "Построение списка всех вакансий...";
             for (int i = 0; i < vacancyArray.Length; i++)
             {
                 ts.Skip("<a href=\"/vacancy/");
                 vacancyArray[i] = "https://ekb.zarplata.ru/vacancy/" + ts.ReadTo("\"");
-                /*
-                string vacancyAddress = "https://ekb.zarplata.ru/vacancy/" + ts.ReadTo("\"");
-                vacancyList.Add(vacancyAddress);
-                */
             }
+            Program.myForm.label1.Text = "Список построен...";
         }
 
-        public bool FindCover()
+        public void FindVacancyList()
         {
             if (string.IsNullOrEmpty(myHtml))
                 throw new MyFirstParserException("Код html не был загружен. Сначала выполните download html");
@@ -86,37 +76,10 @@ namespace MyFirstParser
                 ts.Skip(">");
                 string thisItem = ts.ReadTo("<");
                 th.AddRow(thisId, thisItem);
-                vacancy += thisItem + "\r\n";
-                
-               // return true;
             }
-            ksTable = th.table;
+            Program.myForm.label2.Text = "Готово";
             Program.myForm.comboBox1.DataSource = th.table;
             Program.myForm.comboBox1.DisplayMember = "Item";
-           
-            return true;
-            /*
-            try
-            {
-                myCover = HtmlDownloadHelper.DownloadImage(imageFileUri);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-            */
         }
-
-        public Image Cover
-        {
-            get
-            { 
-                if(myCover == null)
-                throw new MyFirstParserException("Изображение не загружено");
-                return myCover; 
-            }
-        }
-
     }
 }

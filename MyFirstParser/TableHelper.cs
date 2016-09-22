@@ -24,8 +24,7 @@ namespace MyFirstParser
         
         public void MakeTable()
         {
-            // Create a new DataTable.
-            // Create first column and add to the DataTable.
+            // Первый столбец
             column = new DataColumn();
             column.DataType = System.Type.GetType("System.String");
             column.ColumnName = "Id";
@@ -33,11 +32,9 @@ namespace MyFirstParser
             column.Caption = "Id";
             column.ReadOnly = true;
             column.Unique = true;
-
-            // Add the column to the DataColumnCollection.
             table.Columns.Add(column);
 
-            // Create second column.
+            // Второй столбец
             column = new DataColumn();
             column.DataType = System.Type.GetType("System.String");
             column.ColumnName = "Item";
@@ -46,13 +43,6 @@ namespace MyFirstParser
             column.ReadOnly = false;
             column.Unique = false;
             table.Columns.Add(column);
-
-            
-
-            //dataSet.Tables.Add(table);
-
-            // Create three sets of DataRow objects, 
-            // five rows each, and add to DataTable.
         }
 
         public void MakeTable(bool a)
@@ -102,10 +92,9 @@ namespace MyFirstParser
             row["Id"] = id;
             row["Item"] = item;
             table.Rows.Add(row);
-                
         }
 
-        public void dbAddRow(string date, string vacancy, string salary, string description)
+        public void DbAddRow(string date, string vacancy, string salary, string description)
         {
             row = table.NewRow();
             row["Data"] = date;
@@ -119,14 +108,11 @@ namespace MyFirstParser
         {
             DataRowView myDataRowView = Program.myForm.comboBox1.SelectedItem as DataRowView;
             string sValue = "";
-
             if (myDataRowView != null)
             {
                 sValue = Convert.ToString(myDataRowView.Row["Id"]);
             }
-
             return sValue;
-               
         }
     }
 }
