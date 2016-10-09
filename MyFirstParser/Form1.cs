@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace MyFirstParser
 {
@@ -38,6 +39,32 @@ namespace MyFirstParser
                     vacancyDb.GetDb(ks.vacancyArray);
                 };
             var task = Task.Factory.StartNew(action);
+        }
+
+        public void buttonFilePath_Click()
+        {
+            Action action = () =>
+                {
+                    saveFileDialog.Filter = "MS Access 2002 Files|*.mdb|All Files|*.*";
+                    saveFileDialog.Title = "Сохранить базу данных";
+                    saveFileDialog.ShowDialog();
+                    if (saveFileDialog.FileName != "")
+                    { FileInfo fi = new FileInfo(saveFileDialog.FileName); }
+                    string s = saveFileDialog.FileName;
+                    if (s.Length > 40)
+                        labelFilePath.Text = s.Substring(0, s.IndexOf("\\") + 1) + "..." + s.Substring(s.LastIndexOf("\\"), s.Length - s.LastIndexOf("\\"));
+                    else labelFilePath.Text = saveFileDialog.FileName;
+                    DbCreator.filePath = s;
+                };
+            if (InvokeRequired)
+                Invoke(action);
+            else action();
+
+        }
+
+        public void buttonFilePath_Click(object sender, EventArgs e)
+        {
+            buttonFilePath_Click();
         }
 
     }

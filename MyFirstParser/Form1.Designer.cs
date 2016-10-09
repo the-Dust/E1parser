@@ -33,11 +33,14 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.button2 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.buttonFilePath = new System.Windows.Forms.Button();
+            this.labelFilePath = new System.Windows.Forms.Label();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(50, 62);
+            this.button1.Location = new System.Drawing.Point(50, 35);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(241, 23);
             this.button1.TabIndex = 0;
@@ -76,17 +79,42 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(297, 67);
+            this.label2.Location = new System.Drawing.Point(297, 40);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(153, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "Список вакансий не получен";
+            // 
+            // buttonFilePath
+            // 
+            this.buttonFilePath.Location = new System.Drawing.Point(50, 68);
+            this.buttonFilePath.Name = "buttonFilePath";
+            this.buttonFilePath.Size = new System.Drawing.Size(241, 23);
+            this.buttonFilePath.TabIndex = 8;
+            this.buttonFilePath.Text = "Выбрать директорию сохранения";
+            this.buttonFilePath.UseVisualStyleBackColor = true;
+            this.buttonFilePath.Click += new System.EventHandler(this.buttonFilePath_Click);
+            // 
+            // labelFilePath
+            // 
+            this.labelFilePath.AutoSize = true;
+            this.labelFilePath.Location = new System.Drawing.Point(297, 73);
+            this.labelFilePath.Name = "labelFilePath";
+            this.labelFilePath.Size = new System.Drawing.Size(55, 13);
+            this.labelFilePath.TabIndex = 9;
+            this.labelFilePath.Text = "База.mdb";
+            // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.OverwritePrompt = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(549, 250);
+            this.Controls.Add(this.labelFilePath);
+            this.Controls.Add(this.buttonFilePath);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.comboBox1);
@@ -106,6 +134,9 @@
         private System.Windows.Forms.Button button2;
         public System.Windows.Forms.Label label2;
         public System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button buttonFilePath;
+        private System.Windows.Forms.Label labelFilePath;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
     }
 }
 

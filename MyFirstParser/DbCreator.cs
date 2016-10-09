@@ -5,6 +5,8 @@ using System.Text;
 using System.Data;
 using System.Data.OleDb;
 using System.Windows.Forms;
+using E1Parser;
+using System.IO;
 
 namespace MyFirstParser
 {
@@ -16,13 +18,19 @@ namespace MyFirstParser
         string salary = "33000 руб";
         string description;
 
+        //что делать, если БД уже существует: 1 - перезаписать, 2 - изменить директорию
+        public static int rewriteVar = 0;
+
+        public static string filePath = "База.mdb";
         string sql = "SELECT * FROM MyTable";
-        string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=База.mdb;Jet OLEDB:Engine Type=5";
+        string connectionString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Jet OLEDB:Engine Type=5";
         string clearCreation = "CREATE TABLE MyTable(Data text(255),Salary text(255),Vacancy text(255),Description memo);"; //, PRIMARY KEY (Description)
+        
         
         public DbCreator()
         {
             //Создаем новую базу в конструкторе
+            StartOfDbCreator:
             try
             {
                 ADOX.Catalog BD = new ADOX.Catalog();
@@ -31,14 +39,35 @@ namespace MyFirstParser
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: Failed to create a database." + ex.Message);
+                if (ex.Message == "База данных уже существует.")
+                {
+                    MessageForm form = new MessageForm();
+                    form.ShowDialog();
+                    if (rewriteVar == 1)
+                    {
+                        try { File.Delete(filePath); }
+                        catch (Exception e)
+                        {
+                            MessageBox.Show("Error: Failed to rewrite a database." + e.Message);
+                            
+                        }
+                        rewriteVar = 0;
+                        goto StartOfDbCreator; 
+                    }
+                    else if (rewriteVar == 2)
+                    {
+                        rewriteVar = 0;
+                        goto StartOfDbCreator;
+                    }
+                }
+                else
+                    MessageBox.Show("Error: Failed to create a database." + ex.Message);
                 return;
             }
 
             //Создаем пустую таблицу и добавляем ее в базу
             DataTable myDataTable = new DataTable();
             dbModification(connectionString, clearCreation, myDataTable, false);
-            
         }
 
         //Формируем таблицу базы
