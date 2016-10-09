@@ -54,13 +54,15 @@ namespace MyFirstParser
             int dimension = new Regex("<a href=\"/vacancy/").Matches(vacancyHtml).Count;
             vacancyArray = new string[dimension];
             Array.Clear(vacancyArray, 0, dimension);
-            Program.myForm.label1.Text = "Построение списка всех вакансий...";
+            if (Program.myForm.InvokeRequired)
+                Program.myForm.Invoke((Action)(() => Program.myForm.label1.Text = "Построение списка всех вакансий..."));
             for (int i = 0; i < vacancyArray.Length; i++)
             {
                 ts.Skip("<a href=\"/vacancy/");
                 vacancyArray[i] = "https://ekb.zarplata.ru/vacancy/" + ts.ReadTo("\"");
             }
-            Program.myForm.label1.Text = "Список построен...";
+            if (Program.myForm.InvokeRequired)
+                Program.myForm.Invoke((Action)(() => Program.myForm.label1.Text = "Список построен..."));
         }
 
         public void FindVacancyList()

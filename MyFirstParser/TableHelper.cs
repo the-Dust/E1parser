@@ -10,7 +10,6 @@ namespace MyFirstParser
     class TableHelper
     {
 
-        MyDel ViewHelper;
         public DataTable table = new DataTable("MyTable");
         DataRow row;
         DataColumn column;
@@ -18,13 +17,11 @@ namespace MyFirstParser
         public TableHelper()
         {
             MakeTable();
-            ViewHelper = new MyDel(GetView);
         }
 
         public TableHelper(bool a)
         {
             MakeTable(a);
-            ViewHelper = new MyDel(GetView);
         }
 
         public DataRowView GetView(object o)
@@ -92,8 +89,9 @@ namespace MyFirstParser
             column.ReadOnly = false;
             column.Unique = false; //true
             table.Columns.Add(column);
-
-            table.PrimaryKey = new DataColumn[] { table.Columns["Description"] };
+            
+            //Убрал ключ, но он может понадобиться. Обратить на это внимание в процессе доработки программы
+            //table.PrimaryKey = new DataColumn[] { table.Columns["Description"] };
         }
 
         public void AddRow(string id, string item)
@@ -117,7 +115,8 @@ namespace MyFirstParser
         public static string TakeId()
         {
             
-            DataRowView myDataRowView = Program.myForm.Invoke(new TableHelper().ViewHelper, Program.myForm.comboBox1.SelectedItem) as DataRowView; 
+            DataRowView myDataRowView;
+            myDataRowView = Program.myForm.Invoke((Func<object>)(() => Program.myForm.comboBox1.SelectedItem)) as DataRowView;
             string sValue = "";
             if (myDataRowView != null)
             {

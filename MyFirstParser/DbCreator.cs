@@ -46,7 +46,8 @@ namespace MyFirstParser
         {
             //Пробегаемся по всем html адресам из списка и заполняем таблицу
             TableHelper th = new TableHelper(true);
-            Program.myForm.label1.Text = "Формирование таблицы базы данных...";
+            if (Program.myForm.InvokeRequired)
+                Program.myForm.Invoke((Action)(() => Program.myForm.label1.Text = "Формирование таблицы базы данных..."));
             for (int i = 0; i < array.Length; i++)
             {
                 string choosenVacancy = HtmlDownloadHelper.DownloadHtml(array[i], Encoding.GetEncoding(65001));
@@ -58,10 +59,11 @@ namespace MyFirstParser
                 th.DbAddRow(date, vacancy, salary, description);
             }
             //Записываем полученную таблицу в базу. Все.
-            Program.myForm.label1.Text = "Сохранение базы данных...";
+            if (Program.myForm.InvokeRequired)
+                Program.myForm.Invoke((Action)(() => Program.myForm.label1.Text = "Сохранение базы данных..."));
             dbModification(connectionString, sql, th.table, true);
-            Program.myForm.label1.Text = "Готово";
-            
+            if (Program.myForm.InvokeRequired)
+                Program.myForm.Invoke((Action)(() => Program.myForm.label1.Text = "Готово"));
         }
         //Метод подключения и модификации базы
         public static void dbModification(string sqlConnection, string sqlCommand, DataTable dataTable, bool isUpdate)

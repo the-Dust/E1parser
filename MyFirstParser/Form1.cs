@@ -6,10 +6,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace MyFirstParser
 {
-    public delegate DataRowView MyDel(object view);
     public partial class Form1 : Form
     {
         private KinopoiskSearcher ks;
@@ -31,14 +31,14 @@ namespace MyFirstParser
 
         private void button2_Click(object sender, EventArgs e)
         {
-            backgroundWorker1.RunWorkerAsync();
+            Action action = () =>
+                {
+                    ks.FindVacancy(TableHelper.TakeId());
+                    DbCreator vacancyDb = new DbCreator();
+                    vacancyDb.GetDb(ks.vacancyArray);
+                };
+            var task = Task.Factory.StartNew(action);
         }
 
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-            ks.FindVacancy(TableHelper.TakeId());
-            DbCreator vacancyDb = new DbCreator();
-            vacancyDb.GetDb(ks.vacancyArray);
-        }
     }
 }
