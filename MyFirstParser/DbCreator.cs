@@ -76,7 +76,13 @@ namespace MyFirstParser
             //Пробегаемся по всем html адресам из списка и заполняем таблицу
             TableHelper th = new TableHelper(true);
             if (Program.myForm.InvokeRequired)
-                Program.myForm.Invoke((Action)(() => Program.myForm.label1.Text = "Формирование таблицы базы данных..."));
+                Program.myForm.Invoke((Action)(() =>
+                    {
+                        Program.myForm.label1.Text = "Формирование таблицы базы данных...";
+                        Program.myForm.progressBar.Visible = true;
+                        Program.myForm.progressBar.Minimum = 0;
+                        Program.myForm.progressBar.Maximum = array.Length - 1;
+                    }));
             for (int i = 0; i < array.Length; i++)
             {
                 string choosenVacancy = HtmlDownloadHelper.DownloadHtml(array[i], Encoding.GetEncoding(65001));
@@ -86,10 +92,16 @@ namespace MyFirstParser
                 ts.Skip("description\" content=\"");
                 description = ts.ReadTo("\"");
                 th.DbAddRow(date, vacancy, salary, description);
+                if (Program.myForm.InvokeRequired)
+                    Program.myForm.Invoke((Action)(() => Program.myForm.progressBar.Value = i));
             }
             //Записываем полученную таблицу в базу. Все.
             if (Program.myForm.InvokeRequired)
-                Program.myForm.Invoke((Action)(() => Program.myForm.label1.Text = "Сохранение базы данных..."));
+                    Program.myForm.Invoke((Action)(() =>
+                    {
+                        Program.myForm.label1.Text = "Сохранение базы данных...";
+                        Program.myForm.progressBar.Visible = false;
+                    }));
             dbModification(connectionString, sql, th.table, true);
             if (Program.myForm.InvokeRequired)
                 Program.myForm.Invoke((Action)(() => Program.myForm.label1.Text = "Готово"));

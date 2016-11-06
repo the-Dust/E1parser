@@ -36,6 +36,7 @@
             this.buttonFilePath = new System.Windows.Forms.Button();
             this.labelFilePath = new System.Windows.Forms.Label();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // button1
@@ -108,11 +109,20 @@
             // 
             this.saveFileDialog.OverwritePrompt = false;
             // 
+            // progressBar1
+            // 
+            this.progressBar.Location = new System.Drawing.Point(50, 193);
+            this.progressBar.Name = "progressBar1";
+            this.progressBar.Size = new System.Drawing.Size(400, 23);
+            this.progressBar.TabIndex = 10;
+            this.progressBar.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(549, 250);
+            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.labelFilePath);
             this.Controls.Add(this.buttonFilePath);
             this.Controls.Add(this.label2);
@@ -137,6 +147,7 @@
         private System.Windows.Forms.Button buttonFilePath;
         private System.Windows.Forms.Label labelFilePath;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        public System.Windows.Forms.ProgressBar progressBar;
     }
 }
 
